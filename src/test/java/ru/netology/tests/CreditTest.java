@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreditTest {
     public static String url = System.getProperty("sut.url");
+    private StartPage startPage;
+    private DataBaseUtils dataBaseUtils;
 
     @BeforeAll
     static void setUpAll() {
@@ -30,12 +32,14 @@ public class CreditTest {
     @BeforeEach
     void setUp() {
         open(url);
+        startPage = new StartPage();
+        dataBaseUtils = new DataBaseUtils();
+        dataBaseUtils.clearDB();
     }
 
     // Группа тестов для валидных данных
     @Test
     void shouldSuccessfullyProcessCreditWithApprovedCard() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateApprovedCard());
         paymentPage.clickContinueButton();
@@ -44,7 +48,6 @@ public class CreditTest {
 
     @Test
     void shouldDeclineCreditWithDeclinedCard() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateDeclinedCard());
         paymentPage.clickContinueButton();
@@ -54,9 +57,6 @@ public class CreditTest {
     // Группа тестов для проверки базы данных
     @Test
     void shouldSaveApprovedCreditStatusInDatabase() {
-        DataBaseUtils dataBaseUtils = new DataBaseUtils();
-        dataBaseUtils.clearDB();
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateApprovedCard());
         paymentPage.clickContinueButton();
@@ -69,9 +69,6 @@ public class CreditTest {
 
     @Test
     void shouldSaveDeclinedCreditStatusInDatabase() {
-        DataBaseUtils dataBaseUtils = new DataBaseUtils();
-        dataBaseUtils.clearDB();
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateDeclinedCard());
         paymentPage.clickContinueButton();
@@ -84,9 +81,6 @@ public class CreditTest {
 
     @Test
     void shouldNotSaveCreditWithFakeCardInDatabase() {
-        DataBaseUtils dataBaseUtils = new DataBaseUtils();
-        dataBaseUtils.clearDB();
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithFakeNumber());
         paymentPage.clickContinueButton();
@@ -100,7 +94,6 @@ public class CreditTest {
     // Группа тестов для невалидных данных карты
     @Test
     void shouldShowErrorForCardNumberWith14Digits() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWith14DigitNumber());
         paymentPage.clickContinueButton();
@@ -109,7 +102,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForEmptyCardNumber() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithEmptyNumber());
         paymentPage.clickContinueButton();
@@ -118,7 +110,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForFakeCardNumber() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithFakeNumber());
         paymentPage.clickContinueButton();
@@ -128,7 +119,6 @@ public class CreditTest {
     // Группа тестов для невалидных данных месяца
     @Test
     void shouldShowErrorForMonthWithOneDigit() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithOneDigitMonth());
         paymentPage.clickContinueButton();
@@ -137,7 +127,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForMonthOver12() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithMonthOver12());
         paymentPage.clickContinueButton();
@@ -146,7 +135,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForMonthWithNullValue() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithNullMonth());
         paymentPage.clickContinueButton();
@@ -155,7 +143,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForEmptyMonth() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithEmptyMonth());
         paymentPage.clickContinueButton();
@@ -165,7 +152,6 @@ public class CreditTest {
     // Группа тестов для невалидных данных года
     @Test
     void shouldShowErrorForYearWithOneDigit() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithOneDigitYear());
         paymentPage.clickContinueButton();
@@ -174,7 +160,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForPreviousYear() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithPastYear());
         paymentPage.clickContinueButton();
@@ -183,7 +168,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForYearWithNullValue() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithNullYear());
         paymentPage.clickContinueButton();
@@ -192,7 +176,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForEmptyYear() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithEmptyYear());
         paymentPage.clickContinueButton();
@@ -201,7 +184,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForYearInFuture() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithFutureYear());
         paymentPage.clickContinueButton();
@@ -211,7 +193,6 @@ public class CreditTest {
     // Группа тестов для невалидных данных CVV
     @Test
     void shouldShowErrorForCvvWithOneDigit() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithSingleDigitCvv());
         paymentPage.clickContinueButton();
@@ -220,7 +201,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForCvvWithTwoDigits() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithTwoDigitCvv());
         paymentPage.clickContinueButton();
@@ -229,7 +209,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForCvvWithZeroValue() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithCvvZero());
         paymentPage.clickContinueButton();
@@ -238,7 +217,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForEmptyCvv() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithEmptyCvv());
         paymentPage.clickContinueButton();
@@ -248,7 +226,6 @@ public class CreditTest {
     // Группа тестов для невалидных данных владельца
     @Test
     void shouldShowErrorForOwnerWithOneWord() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithOneWordOwner());
         paymentPage.clickContinueButton();
@@ -257,7 +234,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForOwnerWithCyrillicSymbols() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithCyrillicOwner());
         paymentPage.clickContinueButton();
@@ -266,7 +242,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForOwnerWithDigits() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithOwnerContainingDigits());
         paymentPage.clickContinueButton();
@@ -275,7 +250,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForOwnerWithSpecialSymbols() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithOwnerContainingSpecialSymbols());
         paymentPage.clickContinueButton();
@@ -284,7 +258,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForEmptyOwner() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithEmptyOwner());
         paymentPage.clickContinueButton();
@@ -293,7 +266,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForOwnerWithOnlySpaces() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithOwnerOnlySpaces());
         paymentPage.clickContinueButton();
@@ -302,7 +274,6 @@ public class CreditTest {
 
     @Test
     void shouldShowErrorForOwnerWithOnlyHyphens() {
-        val startPage = new StartPage();
         val paymentPage = startPage.clickCreditButton();
         paymentPage.fillCardInfo(CardDataGenerator.generateCardWithOwnerOnlyHyphens());
         paymentPage.clickContinueButton();

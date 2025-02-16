@@ -11,6 +11,8 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class PaymentPage {
+    private final String continueButton = "button";
+
     public PaymentPage(String text) {
         $$("h3").find(exactText(text)).shouldBe(visible);
     }
@@ -29,7 +31,7 @@ public class PaymentPage {
     }
 
     public void clickContinueButton() {
-        $$("button").filterBy(exactText("Продолжить")).first().click();
+        $$(continueButton).filterBy(exactText("Продолжить")).first().click();
     }
 
     public void waitRequest() {
